@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">HomeworkTewentyTwo</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="favorites">\n\n\n</string>
+    <string name="home" />
+    <string name="chats" />
+    <string name="comments">Comments</string>
+    <string name="likes">Likes</string>
+    <string name="share">Share</string>
+    <string name="write_comment">Write Comment...</string>
+</resources>
