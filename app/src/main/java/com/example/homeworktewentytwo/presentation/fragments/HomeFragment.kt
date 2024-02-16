@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.homeworktewentytwo.R
 import com.example.homeworktewentytwo.data.common.Resource
@@ -38,12 +39,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     override fun listeners() {
 
+
     }
 
     private fun initRecycler(){
 
         storiesAdapter = StoriesRecyclerAdapter()
-        postsAdapter = PostsRecyclerAdapter()
+        postsAdapter = PostsRecyclerAdapter{
+            openPostDetails(it.id)
+        }
         binding.apply {
             storiesRecyclerView.adapter = storiesAdapter
             storiesRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -121,6 +125,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
             }
         }
+    }
+
+
+    private fun openPostDetails(id: Int){
+        findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToPostDetailsFragment(id))
     }
 
 }

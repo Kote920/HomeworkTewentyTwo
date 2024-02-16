@@ -177,29 +177,39 @@
 
 
     <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivAuthorAvatar"
         android:layout_width="42dp"
         android:layout_height="42dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lineBottom"
         android:layout_marginTop="15dp"
-        android:id="@+id/ivAuthorAvatar"
-        android:src="@drawable/bg_green"/>
+        android:src="@drawable/bg_green"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lineBottom" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:layout_width="225dp"
         android:layout_height="42dp"
         android:layout_marginStart="10dp"
-        app:layout_constraintStart_toEndOf="@id/ivAuthorAvatar"
-        app:layout_constraintTop_toTopOf="@id/ivAuthorAvatar"
-        app:layout_constraintBottom_toBottomOf="@id/ivAuthorAvatar"
-        android:textColorHint="@color/text_grey"
-        android:text="@string/write_comment"
-        android:textSize="14sp"
         android:background="@drawable/bg_comment"
         android:drawableEnd="@drawable/ic_attachment"
-        android:padding="10dp"/>
+        android:padding="10dp"
+        android:text="@string/write_comment"
+        android:textColorHint="@color/text_grey"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/ivAuthorAvatar"
+        app:layout_constraintStart_toEndOf="@id/ivAuthorAvatar"
+        app:layout_constraintTop_toTopOf="@id/ivAuthorAvatar" />
 
-
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btnDetails"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:background="@drawable/bg_comment"
+        android:padding="3dp"
+        android:src="@drawable/ic_details"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

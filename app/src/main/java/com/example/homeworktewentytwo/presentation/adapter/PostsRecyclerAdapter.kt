@@ -14,7 +14,7 @@ import com.example.homeworktewentytwo.presentation.extensions.loadImage
 import com.example.homeworktewentytwo.presentation.model.PostUI
 import com.example.homeworktewentytwo.presentation.model.StoryUI
 
-class PostsRecyclerAdapter() :
+class PostsRecyclerAdapter(private val detailsClick: (PostUI) -> Unit) :
     ListAdapter<PostUI, PostsRecyclerAdapter.TripsViewHolder>(PostsDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = TripsViewHolder(
@@ -62,7 +62,8 @@ class PostsRecyclerAdapter() :
         }
 
         private fun listeners() {
-            binding.root.setOnClickListener {
+            binding.btnDetails.setOnClickListener {
+                detailsClick.invoke(model)
             }
         }
 

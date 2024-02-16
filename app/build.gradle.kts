@@ -5,6 +5,7 @@ plugins {
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -76,6 +77,9 @@ dependencies {
     implementation("androidx.hilt:hilt-work:1.1.0")
     implementation("androidx.work:work-runtime-ktx:2.9.0")
     implementation ("androidx.viewpager2:viewpager2:1.0.0")
+    implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
+    implementation("com.google.firebase:firebase-analytics-ktx:21.5.1")
+    implementation("com.google.firebase:firebase-messaging-ktx:23.4.1")
 
 }
 kapt {

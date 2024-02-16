@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "354214213600",
+    "project_id": "homeworktwentythree",
+    "storage_bucket": "homeworktwentythree.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:354214213600:android:5099b1fec23b0ad6459d85",
+        "android_client_info": {
+          "package_name": "com.example.homeworktewentytwo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwtCNf0tr6FYoM2TVTnlYRK2PuTlUSZpk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

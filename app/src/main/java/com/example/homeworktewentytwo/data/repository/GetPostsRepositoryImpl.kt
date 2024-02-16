@@ -35,4 +35,27 @@ class GetPostsRepositoryImpl @Inject constructor(private val postsService: Posts
         }
 
     }
+
+    override suspend fun getPostDetails(id: Int): Flow<Resource<Post>> = withContext(Dispatchers.IO) {
+        flow {
+            try {
+                emit(Resource.Loading())
+                val response = postsService.getPostDetails(id.toString())
+                if (response.isSuccessful) {
+                    val postDetails =  response.body()!!
+                    emit(Resource.Success(postDetails.toDomain()))
+                } else {
+                    Log.d("errorRepository", "problem here")
+                    emit(Resource.Failed("Failed!"))
+                }
+
+            } catch (e: Exception) {
+                emit(Resource.Failed("Error!"))
+                Log.d("errorRepository", e.toString())
+            }
+        }
+
+    }
+
+
 }
