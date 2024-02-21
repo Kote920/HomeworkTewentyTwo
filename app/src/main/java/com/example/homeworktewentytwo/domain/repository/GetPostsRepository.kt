@@ -3,11 +3,12 @@ package com.example.homeworktewentytwo.domain.repository
 import com.example.homeworktewentytwo.data.common.Resource
 import com.example.homeworktewentytwo.domain.model.Post
 import com.example.homeworktewentytwo.domain.model.Story
+import com.example.homeworktewentytwo.domain.wrapper.ResultWrapper
 import kotlinx.coroutines.flow.Flow
 
 interface GetPostsRepository {
 
-    suspend fun getPosts(): Flow<Resource<List<Post>>>
+    suspend fun getPosts():Flow<ResultWrapper<List<Post>>>
 
-    suspend fun getPostDetails(id: Int): Flow<Resource<Post>>
+    suspend fun getPostDetails(id: Int): Flow<ResultWrapper<Post>>
 }

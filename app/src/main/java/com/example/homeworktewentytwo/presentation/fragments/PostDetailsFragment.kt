@@ -1,6 +1,7 @@
 package com.example.homeworktewentytwo.presentation.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,12 @@ import com.example.homeworktewentytwo.R
 import com.example.homeworktewentytwo.data.common.Resource
 import com.example.homeworktewentytwo.databinding.FragmentPostDetailsBinding
 import com.example.homeworktewentytwo.presentation.base.BaseFragment
+import com.example.homeworktewentytwo.presentation.event.DetailsEvent
+import com.example.homeworktewentytwo.presentation.event.HomeEvent
+import com.example.homeworktewentytwo.presentation.model.PostUI
+import com.example.homeworktewentytwo.presentation.model.StoryUI
+import com.example.homeworktewentytwo.presentation.state.DetailsState
+import com.example.homeworktewentytwo.presentation.state.HomeState
 import com.example.homeworktewentytwo.presentation.viewModel.PostDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -32,9 +39,9 @@ class PostDetailsFragment :
         val bundle = arguments
         val value = bundle?.getString("key")
         if (value != null) {
-            viewModel.getPostDetails(value.toInt())
+            viewModel.onEvent(DetailsEvent.LoadDetails(value.toInt()))
         } else {
-            viewModel.getPostDetails(navArgs.id)
+            viewModel.onEvent(DetailsEvent.LoadDetails(navArgs.id))
         }
         bindObserves()
     }
@@ -49,29 +56,7 @@ class PostDetailsFragment :
 
 
                 viewModel.postDetailsFlow.collect() {
-                    when (it) {
-
-                        is Resource.Loading -> {
-                            binding.pbDetails.visibility = View.VISIBLE
-                        }
-
-                        is Resource.Success -> {
-                            binding.pbDetails.visibility = View.GONE
-                            val post = it.responseData
-                            binding.tvTitle.text = post.title
-                            binding.tvDesc.text = post.shareContent
-
-                        }
-
-                        is Resource.Failed -> {
-                            binding.pbDetails.visibility = View.GONE
-                            val errorMessage = it.message
-                            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT)
-                                .show()
-
-                        }
-
-                    }
+                    manageDetailsResult(it)
                 }
 
 
@@ -79,5 +64,26 @@ class PostDetailsFragment :
         }
 
     }
+
+
+    private fun manageDetailsResult(state: DetailsState) {
+        state.errorMessage?.let {
+            Log.d("ErrorLoadingData", it)
+            viewModel.onEvent(DetailsEvent.ResetMessage)
+        }
+
+        manageLoader(state.isLoading, binding.pbDetails)
+
+        state.isSuccess?.let {
+            binding.tvTitle.text = it.title
+            binding.tvDesc.text = it.shareContent
+        }
+
+    }
+
+//
+//    binding.tvTitle.text = post.title
+//    binding.tvDesc.text = post.shareContent
+
 
 }

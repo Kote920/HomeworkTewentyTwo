@@ -43,19 +43,20 @@ class MainActivity : AppCompatActivity() {
         if (intent?.action == "OPEN_POST_DETAILS") {
             val postId = intent.getStringExtra("post_id")
             if (!postId.isNullOrBlank()) {
-                val bundle = Bundle()
-                bundle.putString("id", postId)
-                supportFragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                val fragment = PostDetailsFragment()
-                fragment.arguments = bundle
-
+                val bundle = Bundle().apply {
+                    putString("id", postId)
+                }
+                val fragment = PostDetailsFragment().apply {
+                    arguments = bundle
+                }
                 supportFragmentManager.beginTransaction()
-                    .add(R.id.fragmentContainer, fragment)
+                    .replace(R.id.fragmentContainer, fragment) // Use replace instead of add
+                    .addToBackStack(null) // Optionally add to back stack if needed
                     .commit()
             }
-
         }
     }
+
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)

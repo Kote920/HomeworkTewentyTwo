@@ -1,6 +1,7 @@
 package com.example.homeworktewentytwo.presentation.fragments
 
 import android.os.Bundle
+import android.os.Message
 import android.util.Log.d
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -19,6 +20,10 @@ import com.example.homeworktewentytwo.databinding.FragmentHomeBinding
 import com.example.homeworktewentytwo.presentation.adapter.PostsRecyclerAdapter
 import com.example.homeworktewentytwo.presentation.adapter.StoriesRecyclerAdapter
 import com.example.homeworktewentytwo.presentation.base.BaseFragment
+import com.example.homeworktewentytwo.presentation.event.HomeEvent
+import com.example.homeworktewentytwo.presentation.model.PostUI
+import com.example.homeworktewentytwo.presentation.model.StoryUI
+import com.example.homeworktewentytwo.presentation.state.HomeState
 import com.example.homeworktewentytwo.presentation.viewModel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -31,8 +36,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     override fun setUp() {
         initRecycler()
-        viewModel.getStoriesList()
-        viewModel.getPostsList()
+        viewModel.onEvent(HomeEvent.LoadStories)
+        viewModel.onEvent(HomeEvent.LoadPosts)
         bindPosts()
         bindStories()
     }
@@ -42,52 +47,28 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     }
 
-    private fun initRecycler(){
+    private fun initRecycler() {
 
         storiesAdapter = StoriesRecyclerAdapter()
-        postsAdapter = PostsRecyclerAdapter{
+        postsAdapter = PostsRecyclerAdapter {
             openPostDetails(it.id)
         }
         binding.apply {
             storiesRecyclerView.adapter = storiesAdapter
-            storiesRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            storiesRecyclerView.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             postsRecyclerView.adapter = postsAdapter
             postsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
 
     }
 
-     private fun bindStories() {
+    private fun bindStories() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-
-
                 viewModel.storiesFlow.collect() {
-                    when (it) {
-
-                        is Resource.Loading -> {
-                            binding.pbHome.visibility = View.VISIBLE
-                        }
-
-                        is Resource.Success -> {
-                            binding.pbHome.visibility = View.GONE
-                            val storiesList = it.responseData
-                            storiesAdapter.submitList(storiesList)
-
-                        }
-
-                        is Resource.Failed -> {
-                            binding.pbHome.visibility = View.GONE
-                            val errorMessage = it.message
-                            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT)
-                                .show()
-
-                        }
-
-                    }
+                    manageStoryResult(it)
                 }
-
-
             }
         }
     }
@@ -95,41 +76,50 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private fun bindPosts() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-
-
                 viewModel.postsFlow.collect() {
-                    when (it) {
-
-                        is Resource.Loading -> {
-                            binding.pbHome.visibility = View.VISIBLE
-                        }
-
-                        is Resource.Success -> {
-                            binding.pbHome.visibility = View.GONE
-                            val postsList = it.responseData
-                            postsAdapter.submitList(postsList)
-
-                        }
-
-                        is Resource.Failed -> {
-                            binding.pbHome.visibility = View.GONE
-                            val errorMessage = it.message
-                            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT)
-                                .show()
-
-                        }
-
-                    }
+                    managePostResult(it)
                 }
-
-
             }
         }
     }
 
 
-    private fun openPostDetails(id: Int){
-        findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToPostDetailsFragment(id))
+    private fun openPostDetails(id: Int) {
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeFragmentToPostDetailsFragment(
+                id
+            )
+        )
     }
+
+
+    private  fun managePostResult(state: HomeState<PostUI>) {
+        state.errorMessage?.let {
+            d("ErrorLoadingData", it)
+            viewModel.onEvent(HomeEvent.ResetPostMessage)
+        }
+
+        manageLoader(state.isLoading, binding.pbHome)
+
+        state.isSuccess?.let {
+            postsAdapter.submitList(it)
+        }
+
+    }
+
+    private  fun manageStoryResult(state: HomeState<StoryUI>) {
+        state.errorMessage?.let {
+            d("ErrorLoadingData", it)
+            viewModel.onEvent(HomeEvent.ResetStoryMessage)
+        }
+
+        manageLoader(state.isLoading, binding.pbHome)
+
+        state.isSuccess?.let {
+            storiesAdapter.submitList(it)
+        }
+
+    }
+
 
 }

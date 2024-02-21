@@ -1,9 +1,11 @@
 package com.example.homeworktewentytwo.presentation.base
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
@@ -42,6 +44,19 @@ abstract class BaseFragment<VB : ViewBinding>(private val inflate: inflater<VB>)
     abstract fun listeners()
 
     open fun bindObserves() {}
+
+    fun manageLoader(loading: Boolean, pb: ProgressBar) {
+        if (loading) {
+          pb.visibility = View.VISIBLE
+        } else {
+           pb.visibility = View.GONE
+        }
+    }
+
+    private fun manageError(message: String) {
+        Log.d("Request Error", message)
+
+    }
 
 
 }
